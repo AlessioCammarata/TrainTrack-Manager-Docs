@@ -1,81 +1,227 @@
-# 🚂 TrainTrack Manager
+# TrainTrack Manager - Docs
 
-> [cite_start]Sistema integrato per il controllo, il monitoraggio e l'automazione di un plastico ferroviario tramite Arduino e Python[cite: 334, 356].
+<p align="center">
+  <img src="media/Preview.png" width="60%">
+</p>
 
-![Cover Image](media/cover-image.jpg)
-[cite_start]*Il sistema in funzione presso la stazione "Termini" del plastico[cite: 348].*
-
----
-
-## 📝 Descrizione del Progetto
-[cite_start]TrainTrack Manager è un'applicazione sviluppata per gestire un plastico ferroviario domotico[cite: 334]. [cite_start]Il sistema permette di comandare le locomotive tramite protocollo DCC, gestire i deviatoi attraverso una scheda relè e monitorare la posizione dei treni mediante sensori RFID[cite: 14, 406].
-
-[cite_start]L'obiettivo principale è garantire la sicurezza del circuito attraverso un sistema di automazione che previene le collisioni tra le locomotive[cite: 405, 571].
+### Integrated system for controlling, monitoring, and managing a model railway layout using **Arduino** and **Python**.
 
 ---
 
-## 🏗️ Architettura Hardware
-[cite_start]Il progetto utilizza un'architettura a doppio microcontrollore per separare la gestione della potenza dalla logica di tracciamento[cite: 413, 416].
+## Overview
 
-### Controllo Locomotive e Potenza (Arduino Mega 2560)
-* [cite_start]**Arduino Mega 2560**: Gestisce la generazione del segnale DCC e l'invio dei comandi ai decoder delle locomotive[cite: 421].
-* [cite_start]**Motor Shield Rev3**: Montato sull'Arduino Mega, si occupa della modulazione della corrente per trasmettere i messaggi ai binari[cite: 152, 422].
-* [cite_start]**Protocollo DCCpp**: Permette di nascondere i pacchetti di comando all'interno della corrente alternata di alimentazione[cite: 142, 483].
+**TrainTrack Manager** is a smart railway ecosystem that combines:
+- **Locomotive control**: Digital DCC control via **DCCpp**.
+- **Switch/turnout management**: Manual turnout control and active electrical protections.
+- **Position detection**: Real-time tracking through a network of **RFID (MFRC522)** sensors.
+- **Desktop application**: Python GUI (Tkinter) with concurrent handling (thread/queue).
+- **Video monitoring (optional)**: Video stream integration with OpenCV.
+
+![Cover Image](media/cover-image.jpg)  
+*TrainTrack Manager layout in full setup during a test session.*
+
+---
+
+## Project status (important)
+
+Currently available:
+- Full GUI control of **multiple locomotives at the same time**
+- **Manual** control of all turnouts (switches)
+- Active **RFID tag detection** and data exchange to track where a train is at any moment (application-side)
+- Optional camera-based **second view** (OpenCV) for live monitoring
+
+>**Work in progress:** the **automatic mode** is not complete yet.  
+>In particular, the logic that **automatically triggers turnouts** based on detected position (RFID) and assigned route is still missing.
+
+---
+
+## Related repositories
+
+- **Code (app + firmware):** `AlessioCammarata/TrainTrack-Manager` (Private)
+- **Documentation (this repo):** `AlessioCammarata/TrainTrack-Manager-Docs` (Public)
+
+---
+
+## Hardware architecture (high-level)
+
+The project follows a “two-layer” approach, separating power handling from sensor logic:
+
+### 1) Power & locomotive control — Arduino Mega 2560
+* DCC signal generation and handling via **DCCpp**.
+* Commands sent to locomotive decoders through a **Motor Shield Rev3**.
 
 ![Motor Shield](media/MotorShield.jpg)
-[cite_start]*Dettaglio dell'Arduino Mega con Motor Shield Rev3 installato[cite: 431].*
 
-### Gestione Scambi e Protezione Circuitale
-* [cite_start]**Scheda Relè Optoisolata**: Utilizzata per comandare i deviatoi a 18V garantendo l'isolamento fisico dai circuiti logici di Arduino[cite: 186, 439].
-* [cite_start]**Sicurezza**: Sono stati implementati diodi e LED polarizzati per assorbire i segnali di ritorno causati dalle bobine dei relè[cite: 192, 440].
-
-![Optoisolator Turnouts](media/OptoisolatorTurnouts.jpg)
-[cite_start]*Modulo relè optoisolato per la gestione dei deviatoi[cite: 95, 171].*
-
-### Sistema di Rilevamento (Arduino Uno Rev 3)
-* [cite_start]**Tracking RFID**: Una rete di 8 sensori MFRC522 identifica univocamente ogni locomotiva al suo passaggio[cite: 210, 456].
-* [cite_start]**Cablaggio**: Utilizzo di cavi di diametro tra 2 e 3 mm per ridurre le cadute di tensione lungo il circuito[cite: 457].
+### 2) Tracking & sensors — Arduino Uno Rev3
+* Network of **RFID MFRC522** sensors to uniquely identify locomotives when passing.
+* Standard communication over the **SPI** bus.
 
 ![RFID Detector](media/RFIDdetector.jpg)
-[cite_start]*Sensore RFID posizionato in un punto sensibile del tracciato per il monitoraggio[cite: 256, 408].*
+
+### Switch management & circuit protection
+* **Opto-isolated relay module** to drive 18V turnouts, ensuring physical separation between power and Arduino logic.
+* Use of diodes and polarized LEDs to mitigate inductive kickback from coils.
+
+![Optoisolator Turnouts](media/OptoisolatorTurnouts.jpg)
 
 ---
 
-## 💻 Architettura Software
-[cite_start]L'interfaccia grafica (GUI) è stata sviluppata in **Python** utilizzando il paradigma della programmazione orientata agli oggetti (OOP)[cite: 392, 545].
+## Software architecture
 
-### Tecnologie Utilizzate
-* [cite_start]**Tkinter**: Utilizzata per la realizzazione dell'interfaccia grafica standard[cite: 604].
-* [cite_start]**Threading & Queue**: Gestione della programmazione concorrente per leggere i dati dai sensori in background senza bloccare la GUI[cite: 614, 622].
-* [cite_start]**OpenCV**: Implementata per l'integrazione di una videocamera per il monitoraggio visivo del circuito[cite: 608, 609].
-* [cite_start]**pySerial**: Gestisce la comunicazione bidirezionale con i microcontrollori tramite porta seriale[cite: 606].
+* **Python (GUI + logic):** OOP GUI built with **Tkinter**.
+* **Concurrency:** `threading` and `queue` (FIFO) for asynchronous sensor reading without blocking the UI.
+* **Serial communication:** `pyserial` for continuous PC ↔ Arduino communication.
+* **Computer Vision:** Video stream integration via **OpenCV** for live monitoring.
 
-### Struttura Logica
-[cite_start]Il software è diviso in classi specializzate per massimizzare la modularità[cite: 546, 591]:
-
-![Logic Structure](media/logic-structure.png)
-[cite_start]*Diagramma delle dipendenze logiche tra i moduli del programma[cite: 631, 648].*
+![Logic Structure](media/logic-structure.png)  
+*Logical dependency diagram between software modules.*
 
 ---
 
-## 🤖 Algoritmo di Automazione
-[cite_start]Il sistema di automazione intelligente opera costantemente per prevenire incidenti[cite: 985]:
-1. [cite_start]**Acquisizione**: I dati dei tag RFID vengono processati in ordine FIFO tramite la libreria Queue[cite: 880].
-2. [cite_start]**Analisi**: L'algoritmo calcola i "punti critici", ovvero le intersezioni tra i percorsi assegnati alle locomotive[cite: 893].
-3. [cite_start]**Intervento**: Se viene rilevato un rischio di collisione, il sistema devia automaticamente il percorso o arresta la locomotiva interessata[cite: 896, 990].
+## Automation & safety
+
+The control algorithm runs continuously to ensure layout safety:
+
+1. **Acquisition**: RFID events are read from a FIFO queue.
+2. **Analysis**: Computation of **critical points** (intersections and possible conflicts between assigned routes).
+3. **Intervention (WIP)**: Automatic turnout handling and/or locomotive stop to prevent collisions (automatic turnout triggering is not complete yet).
 
 ---
 
-## 📂 Layout del Circuito
-![High Ground View](media/highground.jpg)
-[cite_start]*Vista zenitale completa del plastico ferroviario TrainTrack Manager[cite: 166, 794].*
+## Track layout
+
+![High Ground View](media/highground.jpg)  
+*Top view of the TrainTrack Manager layout during automation tests.*
 
 ---
 
-## 📝 Riferimenti Tecnici
-* [cite_start]**Arduino DCCpp Library**: Utilizzata per la gestione delle locomotive[cite: 1118].
-* [cite_start]**MFRC522 Library**: Utilizzata per l'interfaccia con i sensori RFID[cite: 1119].
-* [cite_start]**Comunicazione SPI**: Protocollo utilizzato per il collegamento tra sensori e Arduino Uno[cite: 318].
+## Technical references
 
-**Autore:** Alessio Cammarata  
-**Progetto realizzato per:** Corso di Informatica e Telecomunicazioni, A.S. [cite_start]2023/2024 [cite: 326-327].
+* **DCCpp**: Stack for DCC digital locomotive control.
+* **MFRC522**: RFID sensor driver.
+* **pySerial**: Python ↔ Arduino serial communication.
+
+---
+
+## Author
+
+**Alessio Cammarata** — Project developed as final work for the Italian high school graduation exam (Esame di Stato), A.S. 2023/2024 (Computer Science & Telecommunications).
+
+---
+
+## License
+
+This project is released under the **MIT** license. See `LICENSE` for details.
+
+---
+
+# 🇮🇹 Versione Italiana
+
+### Sistema integrato per il controllo, il monitoraggio e la gestione di un plastico ferroviario tramite **Arduino** e **Python**.
+
+---
+
+## Panoramica
+
+**TrainTrack Manager** è un ecosistema domotico che combina:
+- **Controllo locomotive**: Gestione digitale DCC tramite libreria **DCCpp**.
+- **Gestione scambi**: Comando manuale dei deviatoi e protezioni elettriche attive.
+- **Rilevamento posizione**: Tracking in tempo reale tramite rete di sensori **RFID (MFRC522)**.
+- **Applicazione desktop**: Interfaccia grafica in Python (Tkinter) con gestione concorrente (thread/queue).
+- **Monitoraggio video (opzionale)**: Integrazione flussi video con OpenCV.
+
+![Cover Image](media/cover-image.jpg)  
+*Il plastico ferroviario TrainTrack Manager in assetto completo durante una sessione di test.*
+
+---
+
+## Stato del progetto (importante)
+
+Attualmente sono disponibili:
+- Controllo completo da GUI di **più locomotive contemporaneamente**
+- Comando **manuale** di tutti gli scambi (deviatoi)
+- **Rilevazione tag RFID** attiva e scambio dati per capire dove si trova un treno in ogni momento (lato applicazione)
+- **Second view** con videocamera (OpenCV) opzionale per il monitoraggio live
+
+🚧 **In sviluppo:** la modalità **automatica** non è ancora completa.  
+In particolare manca la logica che attiva **automaticamente i deviatoi** in base alla posizione rilevata (RFID) e al percorso assegnato.
+
+---
+
+## Repository collegati
+
+- **Codice (app + firmware):** `AlessioCammarata/TrainTrack-Manager` (Privato)
+- **Documentazione (questa repo):** `AlessioCammarata/TrainTrack-Manager-Docs` (Pubblico)
+
+---
+
+## Architettura Hardware (high-level)
+
+Il progetto adotta un approccio a “doppio livello” separando la potenza dalla logica dei sensori:
+
+### 1) Controllo Potenza & Locomotive — Arduino Mega 2560
+* Generazione e gestione del segnale DCC tramite libreria **DCCpp**.
+* Invio comandi ai decoder delle locomotive attraverso **Motor Shield Rev3**.
+
+![Motor Shield](media/MotorShield.jpg)
+
+### 2) Tracking & Sensori — Arduino Uno Rev3
+* Rete di sensori **RFID MFRC522** per identificare univocamente le locomotive al passaggio.
+* Comunicazione standard su bus **SPI**.
+
+![RFID Detector](media/RFIDdetector.jpg)
+
+### Gestione scambi e protezione circuitale
+* Modulo **relè optoisolato** per comandare i deviatoi a 18V, garantendo la separazione fisica tra potenza e logica di Arduino.
+* Utilizzo di diodi e LED polarizzati per mitigare i ritorni induttivi dalle bobine.
+
+![Optoisolator Turnouts](media/OptoisolatorTurnouts.jpg)
+
+---
+
+## Architettura Software
+
+* **Python (GUI + logica):** Interfaccia grafica OOP sviluppata in **Tkinter**.
+* **Concorrenza:** Gestione tramite `threading` e `queue` (logica FIFO) per la lettura asincrona dei sensori senza bloccare la UI.
+* **Comunicazione seriale:** Libreria `pyserial` per il dialogo costante PC ↔ Arduino.
+* **Computer Vision:** Integrazione flussi video via **OpenCV** per il monitoraggio live.
+
+![Logic Structure](media/logic-structure.png)  
+*Diagramma delle dipendenze logiche tra i moduli del programma.*
+
+---
+
+## Automazione e Sicurezza
+
+L’algoritmo di controllo lavora in ciclo continuo per garantire la sicurezza del plastico:
+
+1. **Acquisizione**: Lettura degli eventi RFID dalla coda FIFO.
+2. **Analisi**: Calcolo dei **punti critici** (intersezioni e potenziali conflitti tra i percorsi assegnati).
+3. **Intervento (WIP)**: Gestione automatica dei deviatoi e/o arresto della locomotiva per prevenire collisioni (attivazione automatica deviatoi non ancora completa).
+
+---
+
+## Layout del Circuito
+
+![High Ground View](media/highground.jpg)  
+*Vista zenitale del plastico ferroviario TrainTrack Manager durante i test di automazione.*
+
+---
+
+## Riferimenti tecnici
+
+* **DCCpp**: Stack per il controllo digitale DCC delle locomotive.
+* **MFRC522**: Driver per sensori RFID.
+* **pySerial**: Comunicazione seriale Python ↔ Arduino.
+
+---
+
+## Autore
+
+**Alessio Cammarata** — Progetto realizzato come elaborato per l'Esame di Stato A.S. 2023/2024 (Informatica e Telecomunicazioni).
+
+---
+
+## Licenza
+
+Questo progetto è rilasciato sotto licenza **MIT**. Consulta il file `LICENSE` per maggiori dettagli.
