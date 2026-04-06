@@ -8,6 +8,21 @@
 
 ---
 
+## Download & Releases (Pre-release)
+
+The latest version of the application is available as a **standalone executable for Windows 64-bit**.
+
+* **Download**: [Latest Pre-release v0.9.0-beta](https://github.com/AlessioCammarata/TrainTrack-Manager-Docs/releases)
+* **Installation**: 
+    1. Download the file `TrainTrackManager_v0.9.0_Win64.zip` from the **Assets** section (do **NOT** download the "Source code" files, as they do not contain the compiled app).
+    2. Extract the ZIP folder to your PC.
+    3. Run `TrainTrackManager.exe`.
+  >Important: Do not move the TrainTrackManager.exe file out of its original folder. The entire extracted directory structure must be kept intact, as the application relies on specific relative paths to access the /assets and /languages folders .
+* **Important**: Keep the `/assets` and `/languages` folders in the same directory as the `.exe` file for the GUI to function correctly.
+* **Preview Mode**: You can explore the GUI and manage the database even without an Arduino connected.
+* **Antivirus Note**: Since the executable is not digitally signed, Windows SmartScreen or your Antivirus might flag it as a "False Positive". You can safely allow the execution.
+---
+
 ## Overview
 
 **TrainTrack Manager** is a smart railway ecosystem that combines:
@@ -119,6 +134,21 @@ This project is released under the **MIT** license. See `LICENSE` for details.
 
 ### Sistema integrato per il controllo, il monitoraggio e la gestione di un plastico ferroviario tramite **Arduino** e **Python**.
 
+---
+
+## Download e Release (Pre-release)
+
+L'ultima versione dell'applicazione è disponibile come **eseguibile standalone per Windows 64-bit**.
+
+* **Download**: [Pagina delle Release](https://github.com/AlessioCammarata/TrainTrack-Manager-Docs/releases)
+* **Installazione**: 
+    1. Scarica il file `TrainTrackManager_v0.9.0_Win64.zip` dalla sezione **Assets** (NON scaricare i file "Source code").
+    2. Estrai la cartella sul tuo PC.
+    3. Avvia `TrainTrackManager.exe`.
+  
+>Importante: Non spostare il file TrainTrackManager.exe al di fuori della cartella estratta. La struttura delle cartelle deve rimanere esattamente così com'è; l'eseguibile ha bisogno di trovare le sottocartelle /assets e /languages nella loro posizione originale per funzionare .
+* **Nota**: Mantieni le cartelle `/assets` e `/languages` nella stessa directory dell'eseguibile per il corretto funzionamento dell'interfaccia.
+* **Preview Mode**: È possibile esplorare la GUI e il database anche senza Arduino collegato.
 ---
 
 ## Panoramica
