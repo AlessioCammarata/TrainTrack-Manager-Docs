@@ -12,7 +12,7 @@
 Sistema integrato per il controllo, il monitoraggio e la gestione di un plastico ferroviario tramite **Arduino** e **Python**.
 
 <p align="center">
-  <video src="https://github.com/user-attachments/assets/e7bc4636-fc0d-448d-9878-869da95e0653"  controls muted autoplay loop>
+  <video src="https://github.com/user-attachments/assets/4eb8992b-b024-4acb-93e2-5e106119a5ab"  controls muted autoplay loop>
     Il tuo browser non supporta il video.
   </video>
 </p>
