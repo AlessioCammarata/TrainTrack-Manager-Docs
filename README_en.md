@@ -5,13 +5,13 @@
 </div>
 
 <p align="center">
-  <img src="media/Preview.png" style="width:300px; height:300px; object-fit:cover;">
+  <img src="media/Preview.png" width = "45%" height="45%">
 </p>
 
 Integrated system for controlling, monitoring, and managing a model railway layout using **Arduino** and **Python**.
 
 <p align="center">
-  <video src="media/Video.mp4"  controls muted autoplay loop>
+  <video src="https://github.com/user-attachments/assets/e7bc4636-fc0d-448d-9878-869da95e0653"  controls muted autoplay loop>
     The browser does not support the video.
   </video>
 </p>
