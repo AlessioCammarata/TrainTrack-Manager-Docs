@@ -10,11 +10,7 @@
 
 Integrated system for controlling, monitoring, and managing a model railway layout using **Arduino** and **Python**.
 
-<p align="center">
-  <video src="https://github.com/user-attachments/assets/4eb8992b-b024-4acb-93e2-5e106119a5ab"  controls muted autoplay loop>
-    The browser does not support the video.
-  </video>
-</p>
+https://github.com/user-attachments/assets/876c4b3d-add1-43a4-82bb-5d5856b220f0
 
 ## Download & Releases (Pre-release)
 
